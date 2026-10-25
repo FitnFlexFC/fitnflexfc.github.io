@@ -346,6 +346,9 @@ color: var(--muted);
 .photo-preview svg { width: 34px; height: 34px; }
 .photo-btn {
 flex: 1;
+display: flex;
+flex-direction: column;
+gap: 10px;
 }
 .btn-ghost {
 display: inline-flex; align-items: center; justify-content: center; gap: 8px;
@@ -551,15 +554,20 @@ padding: 10px 16px 0;
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9" r="3.2"/><path d="M5 20c0-3.3 3.1-5.5 7-5.5s7 2.2 7 5.5"/></svg>
 </div>
 <div class="photo-btn">
-<button type="button" class="btn-ghost" id="photoBtn">
-<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
-Upload photo
+<button type="button" class="btn-ghost" id="cameraBtn">
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>
+Take photo
 </button>
-<input id="photo" name="photo" type="file" accept="image/*" class="sr">
+<button type="button" class="btn-ghost" id="galleryBtn">
+<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M20 16l-5-5-7 7"/></svg>
+Choose from gallery
+</button>
+<input id="photoCamera" type="file" accept="image/*" capture="environment" class="sr" tabindex="-1">
+<input id="photo" name="photo" type="file" accept="image/*" class="sr" tabindex="-1">
 <div class="photo-name" id="photoName"></div>
 </div>
 </div>
-<div class="hint">A clear face photo for your member profile. Max 5 MB.</div>
+<div class="hint">A clear face photo for your member profile. Take a new one or pick one you already have. Max 5 MB.</div>
 </div>
 <div class="field" data-f="occupation">
 <label for="occupation">Occupation / profession <span class="req">*</span></label>
@@ -857,12 +865,14 @@ referral.addEventListener("change", function(){
 referrerWrap.hidden = !(referral.value === "A current member referred me" || referral.value === "Friend or family");
 });
 /* ---------- Photo ---------- */
-var photoInput = $("#photo"), photoBtn = $("#photoBtn"),
+var photoInput = $("#photo"), cameraInput = $("#photoCamera"),
 photoPrev = $("#photoPrev"), photoName = $("#photoName");
 var photoData = null;
-photoBtn.addEventListener("click", function(){ photoInput.click(); });
-photoInput.addEventListener("change", function(){
-var f = photoInput.files[0];
+$("#cameraBtn").addEventListener("click", function(){ cameraInput.value = ""; cameraInput.click(); });
+$("#galleryBtn").addEventListener("click", function(){ photoInput.value = ""; photoInput.click(); });
+cameraInput.addEventListener("change", function(){ handlePhoto(cameraInput.files[0]); });
+photoInput.addEventListener("change", function(){ handlePhoto(photoInput.files[0]); });
+function handlePhoto(f){
 if(!f) return;
 if(f.size > 5*1024*1024){ photoName.textContent = "That file is over 5 MB — please choose a smaller image."; photoName.style.color="var(--bad)"; return; }
 photoName.style.color="var(--muted)";
@@ -883,7 +893,7 @@ photoName.textContent = f.name;
 img.src = e.target.result;
 };
 reader.readAsDataURL(f);
-});
+}
 /* ---------- Validation ---------- */
 function setErr(name, on, msg){
 var wrap = $('[data-f="'+name+'"]');
