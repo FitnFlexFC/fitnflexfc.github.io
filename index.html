@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Register as a member of Fit &amp; Flex Football Club. Peace &amp; Unity, est. 2019.">
+<meta property="og:title" content="Fit &amp; Flex FC Member Registration">
+<meta property="og:description" content="Register as a member of Fit &amp; Flex Football Club. Takes about 3 minutes.">
+<meta name="theme-color" content="#B41E1E">
+<title>Fit &amp; Flex FC Registration</title>
+<link rel="icon" id="favicon" href="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* ============================================================
+LAYOUT CONCEPT: single-column mobile wizard. A fixed badge
+header, a slim progress rail, one card holding the active
+step, and a sticky footer nav. Everything sized up for 40+
+eyes: 17px base, 52px controls, high dark-on-light contrast.
+Brand tokens pulled from the club crest (crimson / amber / ink).
+============================================================ */
+:root {
+/* Brand — from the badge */
+--crimson: #B41E1E;        /* crest outline + ribbon */
+--crimson-deep: #8E1515;
+--amber: #F5A313;          /* shield fill */
+--amber-soft: #FCEBCB;     /* amber tint for fills */
+--ink: #1C1A17;            /* near-black, warm */
+--fg: #26231F;             /* body text */
+--muted: #6E675E;          /* secondary text */
+--line: #E3DCD2;           /* hairlines */
+--field: #FFFFFF;          /* input bg */
+--field-line: #CFC6B9;     /* input border */
+--bg: #F3EEE6;             /* warm paper ground */
+--card: #FFFFFF;           /* card surface */
+--good: #167C4A;           /* success */
+--bad: #C02626;            /* error */
+--focus: #1D6FE0;          /* focus ring — distinct from brand red */
+--shadow: 0 6px 24px rgba(40,28,10,.10), 0 1px 3px rgba(40,28,10,.08);
+/* Type */
+--display: "Archivo", system-ui, sans-serif;     /* condensed-ish, echoes crest */
+--body: "Inter", system-ui, -apple-system, sans-serif;
+color-scheme: light;
+}
+/* Default follows the phone's system setting; the toggle overrides it
+either way (data-theme), and that choice is remembered per device. */
+@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]) {
+--crimson: #E04B4B;
+--crimson-deep: #C23636;
+--amber: #F5B33D;
+--amber-soft: #3A2E18;
+--ink: #F4EFE8;
+--fg: #EBE5DC;
+--muted: #A99F91;
+--line: #38332C;
+--field: #262219;
+--field-line: #4A4337;
+--bg: #17140F;
+--card: #211D16;
+--good: #4BBE82;
+--bad: #F08A8A;
+--focus: #6AA6FF;
+--shadow: 0 8px 28px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.4);
+color-scheme: dark;
+}
+}
+:root[data-theme="dark"] {
+--crimson: #E04B4B;
+--crimson-deep: #C23636;
+--amber: #F5B33D;
+--amber-soft: #3A2E18;
+--ink: #F4EFE8;
+--fg: #EBE5DC;
+--muted: #A99F91;
+--line: #38332C;
+--field: #262219;
+--field-line: #4A4337;
+--bg: #17140F;
+--card: #211D16;
+--good: #4BBE82;
+--bad: #F08A8A;
+--focus: #6AA6FF;
+--shadow: 0 8px 28px rgba(0,0,0,.45), 0 1px 3px rgba(0,0,0,.4);
+color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+body {
+background: var(--bg);
+color: var(--fg);
+font-family: var(--body);
+font-size: 17px;
+line-height: 1.5;
+-webkit-font-smoothing: antialiased;
+text-rendering: optimizeLegibility;
+}
+/* paint the safe-area band at the top with the brand bar colour */
+body::before {
+content: "";
+position: fixed;
+inset: 0 0 auto;
+height: env(safe-area-inset-top, 0px);
+background: var(--crimson-deep);
+z-index: 60;
+}
+/* ---------- App shell ---------- */
+.app {
+max-width: 560px;
+margin: 0 auto;
+min-height: 100%;
+display: flex;
+flex-direction: column;
+}
+/* ---------- Header ---------- */
+.hdr {
+background: linear-gradient(160deg, var(--crimson) 0%, var(--crimson-deep) 100%);
+color: #fff;
+padding-block: 20px 18px;
+padding-left: max(18px, env(safe-area-inset-left, 0px));
+padding-right: max(18px, env(safe-area-inset-right, 0px));
+display: flex;
+align-items: center;
+gap: 14px;
+position: relative;
+overflow: hidden;
+}
+.hdr::after { /* subtle amber sheen */
+content:"";
+position:absolute; right:-40px; top:-40px;
+width:160px; height:160px; border-radius:50%;
+background: radial-gradient(circle, rgba(245,163,19,.35), transparent 70%);
+pointer-events:none;
+}
+.badge {
+width: 58px; height: 58px; flex: none;
+border-radius: 12px;
+background: #fff;
+padding: 5px;
+box-shadow: 0 2px 8px rgba(0,0,0,.25);
+object-fit: contain;
+}
+.hdr-txt { min-width: 0; padding-right: 40px; } /* clear the theme button */
+.hdr-txt .club {
+font-family: var(--display);
+font-weight: 800;
+font-size: 1.28rem;
+line-height: 1.05;
+letter-spacing: .01em;
+text-wrap: balance;
+}
+.hdr-txt .sub {
+font-size: .82rem;
+opacity: .9;
+margin-top: 3px;
+letter-spacing: .04em;
+text-transform: uppercase;
+}
+.theme-btn {
+position: absolute; top: 12px;
+right: max(14px, env(safe-area-inset-right, 0px));
+width: 38px; height: 38px; border-radius: 50%;
+border: 1px solid rgba(255,255,255,.4);
+background: rgba(255,255,255,.12);
+color: #fff; font-size: 18px; cursor: pointer;
+display: grid; place-items: center;
+z-index: 2;
+}
+/* ---------- Progress rail ---------- */
+.rail {
+padding-block: 16px 4px;
+padding-left: max(18px, env(safe-area-inset-left, 0px));
+padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+.steps {
+display: flex;
+align-items: flex-start;
+gap: 6px;
+}
+.step-dot {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 7px;
+position: relative;
+}
+.step-dot .num {
+width: 34px; height: 34px; border-radius: 50%;
+display: grid; place-items: center;
+font-family: var(--display); font-weight: 700; font-size: .95rem;
+background: var(--card);
+border: 2px solid var(--field-line);
+color: var(--muted);
+transition: background .25s, border-color .25s, color .25s;
+z-index: 2;
+}
+.step-dot .lbl {
+font-size: .72rem;
+color: var(--muted);
+text-align: center;
+letter-spacing: .02em;
+line-height: 1.2;
+}
+.step-dot[data-state="active"] .num {
+background: var(--crimson); border-color: var(--crimson); color: #fff;
+box-shadow: 0 0 0 4px color-mix(in srgb, var(--crimson) 18%, transparent);
+}
+.step-dot[data-state="done"] .num {
+background: var(--good); border-color: var(--good); color: #fff;
+}
+.step-dot[data-state="active"] .lbl { color: var(--fg); font-weight: 600; }
+/* connector line */
+.step-dot:not(:last-child)::after {
+content:""; position: absolute; top: 16px; left: 50%; width: 100%; height: 2px;
+background: var(--field-line); z-index: 1;
+}
+.step-dot[data-state="done"]:not(:last-child)::after { background: var(--good); }
+/* ---------- Main / card ---------- */
+.main {
+flex: 1;
+padding-block: 10px 120px;
+padding-left: max(16px, env(safe-area-inset-left, 0px));
+padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.card {
+background: var(--card);
+border: 1px solid var(--line);
+border-radius: 18px;
+box-shadow: var(--shadow);
+padding: 22px 18px 24px;
+}
+.step-head { margin-bottom: 18px; }
+.step-head h2 {
+font-family: var(--display);
+font-weight: 800;
+font-size: 1.5rem;
+margin: 0;
+color: var(--ink);
+letter-spacing: .005em;
+text-wrap: balance;
+}
+.step-head p {
+margin: 6px 0 0;
+color: var(--muted);
+font-size: .95rem;
+}
+/* step transition */
+.step-panel { animation: slidein .32s cubic-bezier(.22,.61,.36,1); }
+@keyframes slidein {
+from { opacity: 0; transform: translateY(10px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+.step-panel { animation: none; }
+* { scroll-behavior: auto !important; }
+}
+/* ---------- Fields ---------- */
+.field { margin-bottom: 18px; }
+.field > label {
+display: block;
+font-weight: 600;
+font-size: .95rem;
+margin-bottom: 7px;
+color: var(--fg);
+}
+.field .req { color: var(--crimson); margin-left: 2px; }
+.field .opt { color: var(--muted); font-weight: 400; font-size: .82rem; margin-left: 4px; }
+.hint { font-size: .82rem; color: var(--muted); margin-top: 6px; }
+input:not([type=checkbox]):not([type=radio]):not([type=file]), select, textarea {
+width: 100%;
+font-family: var(--body);
+font-size: 1.02rem;
+color: var(--fg);
+background: var(--field);
+border: 1.5px solid var(--field-line);
+border-radius: 12px;
+padding: 14px 14px;
+min-height: 52px;
+transition: border-color .15s, box-shadow .15s;
+-webkit-appearance: none;
+appearance: none;
+}
+/* Native option lists need explicit colours or they go dark-on-dark */
+option { background: var(--field); color: var(--fg); }
+textarea { min-height: 88px; resize: vertical; line-height: 1.45; }
+select {
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236E675E' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+background-repeat: no-repeat;
+background-position: right 14px center;
+padding-right: 42px;
+cursor: pointer;
+}
+input:focus, select:focus, textarea:focus {
+outline: none;
+border-color: var(--focus);
+box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 28%, transparent);
+}
+input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
+.field.invalid input,
+.field.invalid select,
+.field.invalid textarea { border-color: var(--bad); }
+.field.invalid input:focus,
+.field.invalid select:focus,
+.field.invalid textarea:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 26%, transparent); }
+.err {
+display: none;
+color: var(--bad);
+font-size: .85rem;
+margin-top: 6px;
+font-weight: 500;
+}
+.field.invalid .err { display: block; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 420px) { .row2 { grid-template-columns: 1fr; gap: 0; } }
+/* age pill shown under DOB */
+.age-pill {
+display: none;
+margin-top: 8px;
+font-size: .85rem;
+font-weight: 600;
+color: var(--good);
+}
+.age-pill.show { display: block; }
+.age-pill.under { color: var(--bad); }
+/* ---------- Photo upload ---------- */
+.photo-up {
+display: flex;
+align-items: center;
+gap: 16px;
+}
+.photo-preview {
+width: 84px; height: 84px; flex: none;
+border-radius: 14px;
+background: var(--amber-soft);
+border: 2px dashed var(--field-line);
+display: grid; place-items: center;
+overflow: hidden;
+color: var(--muted);
+}
+.photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+.photo-preview svg { width: 34px; height: 34px; }
+.photo-btn {
+flex: 1;
+}
+.btn-ghost {
+display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+width: 100%;
+min-height: 48px;
+background: var(--amber-soft);
+color: var(--crimson-deep);
+border: 1.5px solid color-mix(in srgb, var(--crimson) 30%, transparent);
+border-radius: 12px;
+font-weight: 700; font-size: .95rem;
+cursor: pointer; font-family: var(--body);
+}
+:root[data-theme="dark"] .btn-ghost,
+.btn-ghost { color: var(--crimson); }
+.photo-name { font-size: .82rem; color: var(--muted); margin-top: 7px; word-break: break-word; }
+/* ---------- Segmented (dominant foot) ---------- */
+.seg { display: flex; gap: 10px; }
+.seg label {
+flex: 1;
+position: relative;
+}
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg span {
+display: flex; align-items: center; justify-content: center;
+min-height: 52px;
+border: 1.5px solid var(--field-line);
+border-radius: 12px;
+font-weight: 600;
+cursor: pointer;
+background: var(--field);
+transition: all .15s;
+}
+.seg input:checked + span {
+border-color: var(--crimson);
+background: color-mix(in srgb, var(--crimson) 10%, var(--field));
+color: var(--crimson-deep);
+box-shadow: inset 0 0 0 1px var(--crimson);
+}
+:root[data-theme="dark"] .seg input:checked + span { color: var(--crimson); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .seg input:checked + span { color: var(--crimson); } }
+.seg input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 30%, transparent); }
+/* ---------- Consent checks ---------- */
+.consent {
+display: flex;
+gap: 13px;
+align-items: flex-start;
+padding: 14px;
+border: 1.5px solid var(--field-line);
+border-radius: 12px;
+margin-bottom: 14px;
+background: var(--field);
+cursor: pointer;
+}
+.consent.invalid { border-color: var(--bad); }
+.consent input {
+width: 26px; height: 26px; min-height: 0; flex: none;
+margin-top: 1px;
+accent-color: var(--crimson);
+cursor: pointer;
+transform: scale(1.05);
+}
+.consent .ctext { font-size: .9rem; line-height: 1.45; color: var(--fg); }
+.consent .ctext b { color: var(--ink); }
+/* ---------- Footer nav ---------- */
+.nav {
+position: fixed;
+bottom: 0; left: 0; right: 0;
+z-index: 50;
+background: color-mix(in srgb, var(--bg) 88%, transparent);
+backdrop-filter: blur(10px);
+-webkit-backdrop-filter: blur(10px);
+border-top: 1px solid var(--line);
+padding-top: 12px;
+padding-bottom: max(14px, env(safe-area-inset-bottom, 0px));
+padding-left: max(16px, env(safe-area-inset-left, 0px));
+padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.nav-inner {
+max-width: 560px; margin: 0 auto;
+display: flex; gap: 12px;
+}
+.btn {
+flex: 1;
+min-height: 54px;
+border: none; border-radius: 13px;
+font-family: var(--display);
+font-weight: 700; font-size: 1.05rem;
+letter-spacing: .01em;
+cursor: pointer;
+display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+transition: transform .08s, filter .15s, background .15s;
+}
+.btn:active { transform: scale(.985); }
+.btn-primary {
+background: var(--crimson);
+color: #fff;
+box-shadow: 0 4px 14px color-mix(in srgb, var(--crimson) 35%, transparent);
+}
+.btn-primary:hover { filter: brightness(1.05); }
+.btn-primary:disabled { opacity: .6; cursor: default; filter: none; }
+.btn-back {
+flex: 0 0 34%;
+background: transparent;
+color: var(--fg);
+border: 1.5px solid var(--field-line);
+}
+.btn-back[hidden] { display: none; }
+/* spinner */
+.spin {
+width: 20px; height: 20px;
+border: 2.5px solid rgba(255,255,255,.4);
+border-top-color: #fff;
+border-radius: 50%;
+animation: rot .7s linear infinite;
+}
+@keyframes rot { to { transform: rotate(360deg); } }
+/* ---------- Success screen ---------- */
+.success {
+text-align: center;
+padding: 44px 20px 30px;
+animation: slidein .4s ease;
+}
+.success .check {
+width: 92px; height: 92px; margin: 0 auto 22px;
+border-radius: 50%;
+background: color-mix(in srgb, var(--good) 15%, var(--card));
+display: grid; place-items: center;
+}
+.success .check svg { width: 48px; height: 48px; stroke: var(--good); }
+.success .draw { stroke-dasharray: 48; stroke-dashoffset: 48; animation: draw .5s .25s ease forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.success h2 {
+font-family: var(--display); font-weight: 800; font-size: 1.7rem;
+color: var(--ink); margin: 0 0 10px;
+}
+.success p { color: var(--muted); font-size: 1rem; max-width: 42ch; margin: 0 auto 8px; }
+.success .ref {
+display: inline-block; margin-top: 18px;
+background: var(--amber-soft); color: var(--crimson-deep);
+font-family: var(--display); font-weight: 700; letter-spacing: .05em;
+padding: 8px 18px; border-radius: 10px; font-size: 1.05rem;
+}
+:root[data-theme="dark"] .success .ref { color: var(--amber); }
+.success .motto {
+margin-top: 26px; font-family: var(--display); font-weight: 700;
+text-transform: uppercase; letter-spacing: .14em; font-size: .85rem;
+color: var(--crimson);
+}
+/* demo banner */
+.demo-note {
+font-size: .78rem;
+color: var(--muted);
+text-align: center;
+padding: 10px 16px 0;
+}
+.demo-note b { color: var(--crimson); }
+.sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hdr">
+<img class="badge" id="badge" alt="Fit & Flex FC crest" src="data:image/webp;base64,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">
+<div class="hdr-txt">
+<div class="club">Fit &amp; Flex Football Club</div>
+<div class="sub">Member Registration · Est. 2019</div>
+</div>
+<button class="theme-btn" id="themeBtn" aria-label="Toggle dark mode" type="button">◐</button>
+</header>
+<div class="rail" id="rail" aria-hidden="true">
+<div class="steps">
+<div class="step-dot" data-step="1"><span class="num">1</span><span class="lbl">About You</span></div>
+<div class="step-dot" data-step="2"><span class="num">2</span><span class="lbl">Football<br>Profile</span></div>
+<div class="step-dot" data-step="3"><span class="num">3</span><span class="lbl">Emergency<br>&amp; Consent</span></div>
+</div>
+</div>
+<main class="main">
+<form id="form" novalidate>
+<div class="card" id="card">
+<!-- STEP 1 -->
+<section class="step-panel" data-panel="1">
+<div class="step-head">
+<h2>About You</h2>
+<p>Tell us who you are. This takes under a minute.</p>
+</div>
+<div class="field" data-f="fullName">
+<label for="fullName">Full name <span class="req">*</span></label>
+<input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="e.g. Chukwuemeka Okafor" required>
+<div class="err">Please enter your full name.</div>
+</div>
+<div class="field" data-f="dob">
+<label for="dob">Date of birth <span class="req">*</span></label>
+<input id="dob" name="dob" type="date" required>
+<div class="age-pill" id="agePill"></div>
+<div class="err" id="dobErr">Please enter your date of birth.</div>
+</div>
+<div class="field" data-f="photo">
+<label for="photo">Your photo <span class="opt">(optional)</span></label>
+<div class="photo-up">
+<div class="photo-preview" id="photoPrev" aria-hidden="true">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="9" r="3.2"/><path d="M5 20c0-3.3 3.1-5.5 7-5.5s7 2.2 7 5.5"/></svg>
+</div>
+<div class="photo-btn">
+<button type="button" class="btn-ghost" id="photoBtn">
+<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+Upload photo
+</button>
+<input id="photo" name="photo" type="file" accept="image/*" capture="user" class="sr">
+<div class="photo-name" id="photoName"></div>
+</div>
+</div>
+<div class="hint">A clear face photo for your member profile. Max 5 MB.</div>
+</div>
+<div class="field" data-f="occupation">
+<label for="occupation">Occupation / profession <span class="req">*</span></label>
+<input id="occupation" name="occupation" type="text" autocomplete="organization-title" placeholder="e.g. Civil engineer, Trader, Banker" required>
+<div class="err">Please enter your occupation.</div>
+</div>
+<div class="field" data-f="phone">
+<label for="phone">Phone number <span class="req">*</span></label>
+<input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="e.g. 0803 123 4567" required>
+<div class="err" id="phoneErr">Please enter a valid phone number.</div>
+</div>
+<div class="field" data-f="email">
+<label for="email">Email address <span class="opt">(optional)</span></label>
+<input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+<div class="err" id="emailErr">That email doesn't look right.</div>
+</div>
+<div class="row2">
+<div class="field" data-f="state">
+<label for="state">State <span class="req">*</span></label>
+<select id="state" name="state" required>
+<option value="" disabled selected>Select state</option>
+</select>
+<div class="err">Please select your state.</div>
+</div>
+<div class="field" data-f="lga">
+<label for="lga">L.G.A. <span class="req">*</span></label>
+<select id="lga" name="lga" required disabled>
+<option value="" disabled selected>Select state first</option>
+</select>
+<div class="err">Please select your L.G.A.</div>
+</div>
+</div>
+<div class="field" data-f="address">
+<label for="address">Street / home address <span class="opt">(optional)</span></label>
+<input id="address" name="address" type="text" autocomplete="street-address" placeholder="House no, street, area">
+</div>
+</section>
+<!-- STEP 2 -->
+<section class="step-panel" data-panel="2" hidden>
+<div class="step-head">
+<h2>Football Profile</h2>
+<p>How you play, so we can set up your kit and position.</p>
+</div>
+<div class="field" data-f="position">
+<label for="position">Preferred position <span class="req">*</span></label>
+<select id="position" name="position" required>
+<option value="" disabled selected>Select position</option>
+<option>Goalkeeper</option>
+<option>Defender</option>
+<option>Midfielder</option>
+<option>Forward</option>
+</select>
+<div class="err">Please select your position.</div>
+</div>
+<div class="field" data-f="experience">
+<label for="experience">Years of football experience <span class="req">*</span></label>
+<select id="experience" name="experience" required>
+<option value="" disabled selected>Select experience</option>
+<option>Just starting / casual</option>
+<option>1–3 years</option>
+<option>4–7 years</option>
+<option>8–15 years</option>
+<option>Over 15 years</option>
+</select>
+<div class="err">Please choose an option.</div>
+</div>
+<div class="field" data-f="foot">
+<label>Dominant foot <span class="req">*</span></label>
+<div class="seg" role="radiogroup" aria-label="Dominant foot">
+<label><input type="radio" name="foot" value="Right" required><span>Right</span></label>
+<label><input type="radio" name="foot" value="Left"><span>Left</span></label>
+<label><input type="radio" name="foot" value="Both"><span>Both</span></label>
+</div>
+<div class="err">Please select your dominant foot.</div>
+</div>
+<div class="row2">
+<div class="field" data-f="jerseySize">
+<label for="jerseySize">Jersey size <span class="req">*</span></label>
+<select id="jerseySize" name="jerseySize" required>
+<option value="" disabled selected>Select size</option>
+<option>S</option><option>M</option><option>L</option>
+<option>XL</option><option>2XL</option><option>3XL</option>
+</select>
+<div class="err">Pick a size.</div>
+</div>
+<div class="field" data-f="jerseyNumber">
+<label for="jerseyNumber">Jersey number <span class="opt">(optional)</span></label>
+<input id="jerseyNumber" name="jerseyNumber" type="number" inputmode="numeric" min="1" max="99" placeholder="1–99">
+<div class="err">Pick a number from 1 to 99.</div>
+</div>
+</div>
+<div class="field" data-f="referral">
+<label for="referral">How did you hear about the club? <span class="req">*</span></label>
+<select id="referral" name="referral" required>
+<option value="" disabled selected>Select one</option>
+<option>A current member referred me</option>
+<option>Facebook</option>
+<option>WhatsApp</option>
+<option>Instagram</option>
+<option>Saw them play</option>
+<option>Friend or family</option>
+<option>Other</option>
+</select>
+<div class="err">Please choose an option.</div>
+</div>
+<div class="field" data-f="referrerName" id="referrerWrap" hidden>
+<label for="referrerName">Who referred you? <span class="opt">(optional)</span></label>
+<input id="referrerName" name="referrerName" type="text" placeholder="Name of the member or person">
+</div>
+</section>
+<!-- STEP 3 -->
+<section class="step-panel" data-panel="3" hidden>
+<div class="step-head">
+<h2>Emergency &amp; Consent</h2>
+<p>Just in case, and a couple of agreements before we finish.</p>
+</div>
+<div class="field" data-f="ecName">
+<label for="ecName">Emergency contact name <span class="req">*</span></label>
+<input id="ecName" name="ecName" type="text" autocomplete="name" placeholder="Full name" required>
+<div class="err">Please enter a contact name.</div>
+</div>
+<div class="field" data-f="ecRelationship">
+<label for="ecRelationship">Relationship to you <span class="req">*</span></label>
+<select id="ecRelationship" name="ecRelationship" required>
+<option value="" disabled selected>Select</option>
+<option>Spouse / Partner</option>
+<option>Parent</option>
+<option>Sibling</option>
+<option>Child</option>
+<option>Friend</option>
+<option>Other relative</option>
+<option>Other</option>
+</select>
+<div class="err">Please select a relationship.</div>
+</div>
+<div class="field" data-f="ecPhone">
+<label for="ecPhone">Emergency contact phone <span class="req">*</span></label>
+<input id="ecPhone" name="ecPhone" type="tel" inputmode="tel" placeholder="e.g. 0803 123 4567" required>
+<div class="err" id="ecPhoneErr">Please enter a valid phone number.</div>
+</div>
+<div style="height:4px"></div>
+<label class="consent" data-f="liability" id="liabilityWrap">
+<input type="checkbox" id="liability" name="liability" required>
+<span class="ctext"><b>Assumption of risk.</b> I understand that football involves physical exertion and a risk of injury, and I take part in Fit &amp; Flex FC activities of my own free will and at my own risk.</span>
+</label>
+<div class="err" id="liabilityErr" style="margin-top:-6px;margin-bottom:12px;">Please acknowledge this to continue.</div>
+<label class="consent" data-f="privacy" id="privacyWrap">
+<input type="checkbox" id="privacy" name="privacy" required>
+<span class="ctext"><b>Data consent.</b> I agree that the club may store the details on this form to manage my membership, and that the information I've given is correct.</span>
+</label>
+<div class="err" id="privacyErr" style="margin-top:-6px;">Please tick this to continue.</div>
+<!-- honeypot: hidden from humans, catches bots. Name avoids
+autofill keywords so real browsers never fill it. -->
+<div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;overflow:hidden;">
+<input type="text" id="ffc_hp" name="ffc_hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+</div>
+</section>
+<!-- SUCCESS -->
+<section class="success" data-panel="done" hidden>
+<div class="check">
+<svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M4 12.5l5 5L20 6.5"/></svg>
+</div>
+<h2 id="doneTitle">You're registered!</h2>
+<p id="doneMsg">Thanks for signing up. The Fit &amp; Flex FC team has received your details and will be in touch soon.</p>
+<div class="ref" id="refCode"></div>
+<div class="motto">Peace &amp; Unity</div>
+</section>
+</div>
+</form>
+</main>
+<nav class="nav" id="navBar">
+<div class="nav-inner">
+<button type="button" class="btn btn-back" id="backBtn" hidden>Back</button>
+<button type="button" class="btn btn-primary" id="nextBtn">Continue</button>
+</div>
+<div class="demo-note" id="demoNote"><b>Preview mode</b> — submissions are not saved yet.</div>
+</nav>
+</div>
+<script>
+/* Nigeria: 36 states + FCT, with their Local Government Areas. */
+var NG_STATES = {
+"Abia":["Aba North","Aba South","Arochukwu","Bende","Ikwuano","Isiala Ngwa North","Isiala Ngwa South","Isuikwuato","Obi Ngwa","Ohafia","Osisioma","Ugwunagbo","Ukwa East","Ukwa West","Umuahia North","Umuahia South","Umu Nneochi"],
+"Adamawa":["Demsa","Fufure","Ganye","Gayuk","Gombi","Grie","Hong","Jada","Lamurde","Madagali","Maiha","Mayo Belwa","Michika","Mubi North","Mubi South","Numan","Shelleng","Song","Toungo","Yola North","Yola South"],
+"Akwa Ibom":["Abak","Eastern Obolo","Eket","Esit Eket","Essien Udim","Etim Ekpo","Etinan","Ibeno","Ibesikpo Asutan","Ibiono-Ibom","Ika","Ikono","Ikot Abasi","Ikot Ekpene","Ini","Itu","Mbo","Mkpat-Enin","Nsit-Atai","Nsit-Ibom","Nsit-Ubium","Obot Akara","Okobo","Onna","Oron","Oruk Anam","Udung-Uko","Ukanafun","Uruan","Urue-Offong/Oruko","Uyo"],
+"Anambra":["Aguata","Anambra East","Anambra West","Anaocha","Awka North","Awka South","Ayamelum","Dunukofia","Ekwusigo","Idemili North","Idemili South","Ihiala","Njikoka","Nnewi North","Nnewi South","Ogbaru","Onitsha North","Onitsha South","Orumba North","Orumba South","Oyi"],
+"Bauchi":["Alkaleri","Bauchi","Bogoro","Damban","Darazo","Dass","Gamawa","Ganjuwa","Giade","Itas/Gadau","Jama'are","Katagum","Kirfi","Misau","Ningi","Shira","Tafawa Balewa","Toro","Warji","Zaki"],
+"Bayelsa":["Brass","Ekeremor","Kolokuma/Opokuma","Nembe","Ogbia","Sagbama","Southern Ijaw","Yenagoa"],
+"Benue":["Ado","Agatu","Apa","Buruku","Gboko","Guma","Gwer East","Gwer West","Katsina-Ala","Konshisha","Kwande","Logo","Makurdi","Obi","Ogbadibo","Ohimini","Oju","Okpokwu","Oturkpo","Tarka","Ukum","Ushongo","Vandeikya"],
+"Borno":["Abadam","Askira/Uba","Bama","Bayo","Biu","Chibok","Damboa","Dikwa","Gubio","Guzamala","Gwoza","Hawul","Jere","Kaga","Kala/Balge","Konduga","Kukawa","Kwaya Kusar","Mafa","Magumeri","Maiduguri","Marte","Mobbar","Monguno","Ngala","Nganzai","Shani"],
+"Cross River":["Abi","Akamkpa","Akpabuyo","Bakassi","Bekwarra","Biase","Boki","Calabar Municipal","Calabar South","Etung","Ikom","Obanliku","Obubra","Obudu","Odukpani","Ogoja","Yakuur","Yala"],
+"Delta":["Aniocha North","Aniocha South","Bomadi","Burutu","Ethiope East","Ethiope West","Ika North East","Ika South","Isoko North","Isoko South","Ndokwa East","Ndokwa West","Okpe","Oshimili North","Oshimili South","Patani","Sapele","Udu","Ughelli North","Ughelli South","Ukwuani","Uvwie","Warri North","Warri South","Warri South West"],
+"Ebonyi":["Abakaliki","Afikpo North","Afikpo South","Ebonyi","Ezza North","Ezza South","Ikwo","Ishielu","Ivo","Izzi","Ohaozara","Ohaukwu","Onicha"],
+"Edo":["Akoko-Edo","Egor","Esan Central","Esan North-East","Esan South-East","Esan West","Etsako Central","Etsako East","Etsako West","Igueben","Ikpoba Okha","Orhionmwon","Oredo","Ovia North-East","Ovia South-West","Owan East","Owan West","Uhunmwonde"],
+"Ekiti":["Ado Ekiti","Efon","Ekiti East","Ekiti South-West","Ekiti West","Emure","Gbonyin","Ido Osi","Ijero","Ikere","Ikole","Ilejemeje","Irepodun/Ifelodun","Ise/Orun","Moba","Oye"],
+"Enugu":["Aninri","Awgu","Enugu East","Enugu North","Enugu South","Ezeagu","Igbo Etiti","Igbo Eze North","Igbo Eze South","Isi Uzo","Nkanu East","Nkanu West","Nsukka","Oji River","Udenu","Udi","Uzo-Uwani"],
+"FCT - Abuja":["Abaji","Bwari","Gwagwalada","Kuje","Kwali","Municipal Area Council"],
+"Gombe":["Akko","Balanga","Billiri","Dukku","Funakaye","Gombe","Kaltungo","Kwami","Nafada","Shongom","Yamaltu/Deba"],
+"Imo":["Aboh Mbaise","Ahiazu Mbaise","Ehime Mbano","Ezinihitte","Ideato North","Ideato South","Ihitte/Uboma","Ikeduru","Isiala Mbano","Isu","Mbaitoli","Ngor Okpala","Njaba","Nkwerre","Nwangele","Obowo","Oguta","Ohaji/Egbema","Okigwe","Orlu","Orsu","Oru East","Oru West","Owerri Municipal","Owerri North","Owerri West","Unuimo"],
+"Jigawa":["Auyo","Babura","Biriniwa","Birnin Kudu","Buji","Dutse","Gagarawa","Garki","Gumel","Guri","Gwaram","Gwiwa","Hadejia","Jahun","Kafin Hausa","Kaugama","Kazaure","Kiri Kasama","Kiyawa","Maigatari","Malam Madori","Miga","Ringim","Roni","Sule Tankarkar","Taura","Yankwashi"],
+"Kaduna":["Birnin Gwari","Chikun","Giwa","Igabi","Ikara","Jaba","Jema'a","Kachia","Kaduna North","Kaduna South","Kagarko","Kajuru","Kaura","Kauru","Kubau","Kudan","Lere","Makarfi","Sabon Gari","Sanga","Soba","Zangon Kataf","Zaria"],
+"Kano":["Ajingi","Albasu","Bagwai","Bebeji","Bichi","Bunkure","Dala","Dambatta","Dawakin Kudu","Dawakin Tofa","Doguwa","Fagge","Gabasawa","Garko","Garun Mallam","Gaya","Gezawa","Gwale","Gwarzo","Kabo","Kano Municipal","Karaye","Kibiya","Kiru","Kumbotso","Kunchi","Kura","Madobi","Makoda","Minjibir","Nasarawa","Rano","Rimin Gado","Rogo","Shanono","Sumaila","Takai","Tarauni","Tofa","Tsanyawa","Tudun Wada","Ungogo","Warawa","Wudil"],
+"Katsina":["Bakori","Batagarawa","Batsari","Baure","Bindawa","Charanchi","Dan Musa","Dandume","Danja","Daura","Dutsi","Dutsin Ma","Faskari","Funtua","Ingawa","Jibia","Kafur","Kaita","Kankara","Kankia","Katsina","Kurfi","Kusada","Mai'Adua","Malumfashi","Mani","Mashi","Matazu","Musawa","Rimi","Sabuwa","Safana","Sandamu","Zango"],
+"Kebbi":["Aleiro","Arewa Dandi","Argungu","Augie","Bagudo","Birnin Kebbi","Bunza","Dandi","Fakai","Gwandu","Jega","Kalgo","Koko/Besse","Maiyama","Ngaski","Sakaba","Shanga","Suru","Wasagu/Danko","Yauri","Zuru"],
+"Kogi":["Adavi","Ajaokuta","Ankpa","Bassa","Dekina","Ibaji","Idah","Igalamela Odolu","Ijumu","Kabba/Bunu","Kogi","Lokoja","Mopa Muro","Ofu","Ogori/Magongo","Okehi","Okene","Olamaboro","Omala","Yagba East","Yagba West"],
+"Kwara":["Asa","Baruten","Edu","Ekiti","Ifelodun","Ilorin East","Ilorin South","Ilorin West","Irepodun","Isin","Kaiama","Moro","Offa","Oke Ero","Oyun","Pategi"],
+"Lagos":["Agege","Ajeromi-Ifelodun","Alimosho","Amuwo-Odofin","Apapa","Badagry","Epe","Eti-Osa","Ibeju-Lekki","Ifako-Ijaiye","Ikeja","Ikorodu","Kosofe","Lagos Island","Lagos Mainland","Mushin","Ojo","Oshodi-Isolo","Shomolu","Surulere"],
+"Nasarawa":["Akwanga","Awe","Doma","Karu","Keana","Keffi","Kokona","Lafia","Nasarawa","Nasarawa Egon","Obi","Toto","Wamba"],
+"Niger":["Agaie","Agwara","Bida","Borgu","Bosso","Chanchaga","Edati","Gbako","Gurara","Katcha","Kontagora","Lapai","Lavun","Magama","Mariga","Mashegu","Mokwa","Moya","Paikoro","Rafi","Rijau","Shiroro","Suleja","Tafa","Wushishi"],
+"Ogun":["Abeokuta North","Abeokuta South","Ado-Odo/Ota","Egbado North","Egbado South","Ewekoro","Ifo","Ijebu East","Ijebu North","Ijebu North East","Ijebu Ode","Ikenne","Imeko Afon","Ipokia","Obafemi Owode","Odeda","Odogbolu","Ogun Waterside","Remo North","Shagamu"],
+"Ondo":["Akoko North-East","Akoko North-West","Akoko South-East","Akoko South-West","Akure North","Akure South","Ese Odo","Idanre","Ifedore","Ilaje","Ile Oluji/Okeigbo","Irele","Odigbo","Okitipupa","Ondo East","Ondo West","Ose","Owo"],
+"Osun":["Aiyedaade","Aiyedire","Atakumosa East","Atakumosa West","Boluwaduro","Boripe","Ede North","Ede South","Egbedore","Ejigbo","Ife Central","Ife East","Ife North","Ife South","Ifedayo","Ifelodun","Ila","Ilesa East","Ilesa West","Irepodun","Irewole","Isokan","Iwo","Obokun","Odo Otin","Ola Oluwa","Olorunda","Oriade","Orolu","Osogbo"],
+"Oyo":["Afijio","Akinyele","Atiba","Atisbo","Egbeda","Ibadan North","Ibadan North-East","Ibadan North-West","Ibadan South-East","Ibadan South-West","Ibarapa Central","Ibarapa East","Ibarapa North","Ido","Irepo","Iseyin","Itesiwaju","Iwajowa","Kajola","Lagelu","Ogbomosho North","Ogbomosho South","Ogo Oluwa","Olorunsogo","Oluyole","Ona Ara","Orelope","Ori Ire","Oyo East","Oyo West","Saki East","Saki West","Surulere"],
+"Plateau":["Barkin Ladi","Bassa","Bokkos","Jos East","Jos North","Jos South","Kanam","Kanke","Langtang North","Langtang South","Mangu","Mikang","Pankshin","Qua'an Pan","Riyom","Shendam","Wase"],
+"Rivers":["Abua/Odual","Ahoada East","Ahoada West","Akuku-Toru","Andoni","Asari-Toru","Bonny","Degema","Eleme","Emohua","Etche","Gokana","Ikwerre","Khana","Obio/Akpor","Ogba/Egbema/Ndoni","Ogu/Bolo","Okrika","Omuma","Opobo/Nkoro","Oyigbo","Port Harcourt","Tai"],
+"Sokoto":["Binji","Bodinga","Dange Shuni","Gada","Goronyo","Gudu","Gwadabawa","Illela","Isa","Kebbe","Kware","Rabah","Sabon Birni","Shagari","Silame","Sokoto North","Sokoto South","Tambuwal","Tangaza","Tureta","Wamako","Wurno","Yabo"],
+"Taraba":["Ardo Kola","Bali","Donga","Gashaka","Gassol","Ibi","Jalingo","Karim Lamido","Kumi","Lau","Sardauna","Takum","Ussa","Wukari","Yorro","Zing"],
+"Yobe":["Bade","Bursari","Damaturu","Fika","Fune","Geidam","Gujba","Gulani","Jakusko","Karasuwa","Machina","Nangere","Nguru","Potiskum","Tarmuwa","Yunusari","Yusufari"],
+"Zamfara":["Anka","Bakura","Birnin Magaji/Kiyaw","Bukkuyum","Bungudu","Gummi","Gusau","Kaura Namoda","Maradun","Maru","Shinkafi","Talata Mafara","Tsafe","Zurmi"]
+};
+</script>
+<script>
+try { document.getElementById("favicon").href = document.getElementById("badge").src; } catch(e){}
+</script>
+<script>
+(function(){
+"use strict";
+/* =======================================================
+CONFIG — paste your Google Apps Script Web App URL here
+to go live. While blank, the form runs in preview mode.
+======================================================= */
+// Served by Google Apps Script: submissions go straight to the sheet.
+var SUBMIT_URL = "https://script.google.com/macros/s/AKfycbwHmJ9nf9ad4iGudjy_ylJPZpHTmiXteWGWtUtjAxYv2FRrdEghMB8UlEoIFHC7mGH1uA/exec";
+var LIVE = true;
+var STORAGE_KEY = "ffc_reg_v1";
+var TOTAL = 3;
+var current = 1;
+var $ = function(s, r){ return (r||document).querySelector(s); };
+var $$ = function(s, r){ return Array.prototype.slice.call((r||document).querySelectorAll(s)); };
+var form = $("#form");
+var panels = {};
+$$(".step-panel, .success").forEach(function(p){ panels[p.dataset.panel] = p; });
+var dots = $$(".step-dot");
+var nextBtn = $("#nextBtn");
+var backBtn = $("#backBtn");
+/* ---------- Theme ---------- */
+var themeBtn = $("#themeBtn");
+// Default follows the phone's setting; a saved choice overrides it.
+try {
+var savedTheme = localStorage.getItem("ffc_theme");
+if (savedTheme) document.documentElement.setAttribute("data-theme", savedTheme);
+} catch(e){}
+themeBtn.addEventListener("click", function(){
+var root = document.documentElement;
+var isDark = root.getAttribute("data-theme") === "dark" ||
+(!root.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+var next = isDark ? "light" : "dark";
+root.setAttribute("data-theme", next);
+try { localStorage.setItem("ffc_theme", next); } catch(e){}
+});
+/* ---------- Populate states ---------- */
+var stateSel = $("#state"), lgaSel = $("#lga");
+Object.keys(NG_STATES).sort().forEach(function(st){
+var o = document.createElement("option"); o.textContent = st; stateSel.appendChild(o);
+});
+stateSel.addEventListener("change", function(){
+var lgas = NG_STATES[stateSel.value] || [];
+lgaSel.innerHTML = '<option value="" disabled selected>Select L.G.A.</option>';
+lgas.forEach(function(l){ var o=document.createElement("option"); o.textContent=l; lgaSel.appendChild(o); });
+lgaSel.disabled = false;
+});
+/* ---------- DOB → age ---------- */
+var dob = $("#dob"), agePill = $("#agePill");
+// sensible bounds: 18 to 90 years old
+var today = new Date();
+dob.max = new Date(today.getFullYear()-18, today.getMonth(), today.getDate()).toISOString().slice(0,10);
+dob.min = new Date(today.getFullYear()-90, today.getMonth(), today.getDate()).toISOString().slice(0,10);
+function calcAge(v){
+if(!v) return null;
+var d = new Date(v); if(isNaN(d)) return null;
+var a = today.getFullYear() - d.getFullYear();
+var m = today.getMonth() - d.getMonth();
+if (m < 0 || (m===0 && today.getDate() < d.getDate())) a--;
+return a;
+}
+dob.addEventListener("change", function(){
+var a = calcAge(dob.value);
+if (a === null) { agePill.className = "age-pill"; return; }
+agePill.textContent = "Age: " + a + " years";
+agePill.className = "age-pill show" + (a < 18 ? " under" : "");
+if (a < 18) agePill.textContent = "You must be 18 or older to join.";
+});
+/* ---------- Referral → referrer name ---------- */
+var referral = $("#referral"), referrerWrap = $("#referrerWrap");
+referral.addEventListener("change", function(){
+referrerWrap.hidden = !(referral.value === "A current member referred me" || referral.value === "Friend or family");
+});
+/* ---------- Photo ---------- */
+var photoInput = $("#photo"), photoBtn = $("#photoBtn"),
+photoPrev = $("#photoPrev"), photoName = $("#photoName");
+var photoData = null;
+photoBtn.addEventListener("click", function(){ photoInput.click(); });
+photoInput.addEventListener("change", function(){
+var f = photoInput.files[0];
+if(!f) return;
+if(f.size > 5*1024*1024){ photoName.textContent = "That file is over 5 MB — please choose a smaller image."; photoName.style.color="var(--bad)"; return; }
+photoName.style.color="var(--muted)";
+var reader = new FileReader();
+reader.onload = function(e){
+// downscale to keep the payload small
+var img = new Image();
+img.onload = function(){
+var max = 600, w=img.width, h=img.height;
+var sc = Math.min(1, max/Math.max(w,h));
+var c = document.createElement("canvas");
+c.width = Math.round(w*sc); c.height = Math.round(h*sc);
+c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+photoData = c.toDataURL("image/jpeg", 0.82);
+photoPrev.innerHTML = '<img alt="Your photo preview" src="'+photoData+'">';
+photoName.textContent = f.name;
+};
+img.src = e.target.result;
+};
+reader.readAsDataURL(f);
+});
+/* ---------- Validation ---------- */
+function setErr(name, on, msg){
+var wrap = $('[data-f="'+name+'"]');
+if(!wrap) return;
+wrap.classList.toggle("invalid", !!on);
+if(msg){ var e = wrap.querySelector(".err"); if(e) e.textContent = msg; }
+}
+function phoneOK(v){ return /[0-9]/.test(v) && v.replace(/\D/g,"").length >= 7 && v.replace(/\D/g,"").length <= 15; }
+function emailOK(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+var rules = {
+1: function(){
+var ok = true;
+if(!$("#fullName").value.trim()){ setErr("fullName",true); ok=false; } else setErr("fullName",false);
+var a = calcAge(dob.value);
+if(!dob.value){ setErr("dob",true,"Please enter your date of birth."); ok=false; }
+else if(a !== null && a < 18){ setErr("dob",true,"You must be 18 or older to join."); ok=false; }
+else setErr("dob",false);
+if(!$("#occupation").value.trim()){ setErr("occupation",true); ok=false; } else setErr("occupation",false);
+if(!phoneOK($("#phone").value)){ setErr("phone",true,"Please enter a valid phone number."); ok=false; } else setErr("phone",false);
+var em = $("#email").value.trim();
+if(em && !emailOK(em)){ setErr("email",true); ok=false; } else setErr("email",false);
+if(!stateSel.value){ setErr("state",true); ok=false; } else setErr("state",false);
+if(!lgaSel.value){ setErr("lga",true); ok=false; } else setErr("lga",false);
+return ok;
+},
+2: function(){
+var ok = true;
+["position","experience","jerseySize","referral"].forEach(function(n){
+if(!$("#"+n).value){ setErr(n,true); ok=false; } else setErr(n,false);
+});
+if(!form.foot.value){ setErr("foot",true); ok=false; } else setErr("foot",false);
+var jn = $("#jerseyNumber").value;
+if(jn && (+jn < 1 || +jn > 99)){ setErr("jerseyNumber",true); ok=false; } else setErr("jerseyNumber",false);
+return ok;
+},
+3: function(){
+var ok = true;
+if(!$("#ecName").value.trim()){ setErr("ecName",true); ok=false; } else setErr("ecName",false);
+if(!$("#ecRelationship").value){ setErr("ecRelationship",true); ok=false; } else setErr("ecRelationship",false);
+if(!phoneOK($("#ecPhone").value)){ setErr("ecPhone",true,"Please enter a valid phone number."); ok=false; } else setErr("ecPhone",false);
+$("#liabilityWrap").classList.toggle("invalid", !$("#liability").checked);
+$("#liabilityErr").style.display = $("#liability").checked ? "none":"block";
+$("#privacyWrap").classList.toggle("invalid", !$("#privacy").checked);
+$("#privacyErr").style.display = $("#privacy").checked ? "none":"block";
+if(!$("#liability").checked || !$("#privacy").checked) ok=false;
+return ok;
+}
+};
+/* clear a field's error as the user fixes it */
+form.addEventListener("input", function(e){
+var wrap = e.target.closest("[data-f]");
+if(wrap && wrap.classList.contains("invalid")) wrap.classList.remove("invalid");
+saveDraft();
+});
+form.addEventListener("change", function(e){
+if(e.target.name === "foot") setErr("foot", false);
+if(e.target.id === "liability"){ $("#liabilityWrap").classList.remove("invalid"); $("#liabilityErr").style.display="none"; }
+if(e.target.id === "privacy"){ $("#privacyWrap").classList.remove("invalid"); $("#privacyErr").style.display="none"; }
+saveDraft();
+});
+/* ---------- Navigation ---------- */
+function show(step){
+Object.keys(panels).forEach(function(k){ panels[k].hidden = (k !== String(step)); });
+current = step;
+// dots
+dots.forEach(function(d){
+var n = +d.dataset.step;
+d.dataset.state = n < step ? "done" : (n === step ? "active" : "");
+});
+backBtn.hidden = step === 1 || step === "done";
+if(step === "done"){
+$("#navBar").hidden = true; $("#rail").hidden = true;
+} else {
+nextBtn.innerHTML = step === TOTAL ? "Submit registration" : "Continue";
+}
+window.scrollTo({top:0, behavior: "smooth"});
+// focus first field for keyboard/AT users
+var first = panels[step] && panels[step].querySelector("input,select,textarea");
+if(first && step!==1) setTimeout(function(){ first.focus({preventScroll:true}); }, 320);
+}
+nextBtn.addEventListener("click", function(){
+if(!rules[current]()){
+var bad = $(".field.invalid, .consent.invalid");
+if(bad) bad.scrollIntoView({behavior:"smooth", block:"center"});
+return;
+}
+if(current < TOTAL){ show(current+1); }
+else { submit(); }
+});
+backBtn.addEventListener("click", function(){ if(current>1) show(current-1); });
+/* ---------- Draft autosave ---------- */
+function saveDraft(){
+try {
+var data = collect(false);
+data._step = current;
+localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+} catch(e){}
+}
+function restoreDraft(){
+try {
+var raw = localStorage.getItem(STORAGE_KEY);
+if(!raw) return;
+var d = JSON.parse(raw);
+Object.keys(d).forEach(function(k){
+if(k.charAt(0)==="_") return;
+var el = form.elements[k];
+if(!el) return;
+if(el.type === "radio" || (el.length && el[0] && el[0].type==="radio")){
+form.foot.value = d[k];
+} else if(el.type === "checkbox"){ el.checked = !!d[k]; }
+else { el.value = d[k]; }
+});
+if(d.state){ stateSel.dispatchEvent(new Event("change")); lgaSel.value = d.lga || ""; }
+if(d.referral) referral.dispatchEvent(new Event("change"));
+if(d.dob) dob.dispatchEvent(new Event("change"));
+} catch(e){}
+}
+function collect(withPhoto){
+var o = {};
+["fullName","dob","occupation","phone","email","state","lga","address",
+"position","experience","jerseySize","jerseyNumber","referral","referrerName",
+"ecName","ecRelationship","ecPhone"].forEach(function(n){
+var el = form.elements[n]; if(el) o[n] = el.value;
+});
+o.foot = form.foot.value;
+o.liability = $("#liability").checked;
+o.privacy = $("#privacy").checked;
+o.age = calcAge(dob.value);
+if(withPhoto && photoData) o.photo = photoData;
+return o;
+}
+/* ---------- Submit ---------- */
+function refCode(){
+return "FFC-" + String(Date.now()).slice(-6) + "-" +
+Math.random().toString(36).slice(2,5).toUpperCase();
+}
+function submit(){
+// bot honeypot
+if($("#ffc_hp").value){ return; }
+var ref = refCode();
+var payload = collect(true);
+payload.reference = ref;
+payload.submittedAt = new Date().toISOString();
+nextBtn.disabled = true;
+nextBtn.innerHTML = '<span class="spin"></span> Submitting…';
+function done(){
+try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+$("#refCode").textContent = ref;
+show("done");
+nextBtn.disabled = false;
+}
+function fail(){
+nextBtn.disabled = false;
+nextBtn.innerHTML = "Submit registration";
+setErr("ecPhone", false);
+alertBox("We couldn't send your form just now. Please check your connection and tap Submit again.");
+}
+if(!LIVE){
+setTimeout(done, 900); // preview mode
+return;
+}
+fetch(SUBMIT_URL, {
+method: "POST",
+headers: {"Content-Type": "text/plain;charset=utf-8"},
+body: JSON.stringify(payload)
+}).then(function(r){ return r.json(); })
+.then(function(res){ if (res && res.result === "success") done(); else fail(); })
+.catch(fail);
+}
+function alertBox(msg){
+var n = $("#demoNote");
+n.hidden = false;
+n.innerHTML = msg;
+n.style.color = "var(--bad)";
+}
+/* ---------- init ---------- */
+if(!LIVE){ /* keep preview note */ } else { $("#demoNote").hidden = true; }
+restoreDraft();
+show(1);
+})();
+</script>
+</body>
+</html>
