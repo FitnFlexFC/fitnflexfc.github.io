@@ -380,12 +380,13 @@ transition: all .15s;
 }
 .seg input:checked + span {
 border-color: var(--crimson);
-background: color-mix(in srgb, var(--crimson) 10%, var(--field));
-color: var(--crimson-deep);
-box-shadow: inset 0 0 0 1px var(--crimson);
+background: var(--crimson);
+color: #fff;
+box-shadow: 0 3px 10px color-mix(in srgb, var(--crimson) 30%, transparent);
 }
-:root[data-theme="dark"] .seg input:checked + span { color: var(--crimson); }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .seg input:checked + span { color: var(--crimson); } }
+.seg input:checked + span::before { content: "\2713\00a0"; font-weight: 800; }
+:root[data-theme="dark"] .seg input:checked + span { background: var(--crimson-deep); border-color: var(--crimson-deep); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .seg input:checked + span { background: var(--crimson-deep); border-color: var(--crimson-deep); } }
 .seg input:focus-visible + span { box-shadow: 0 0 0 3px color-mix(in srgb, var(--focus) 30%, transparent); }
 /* ---------- Consent checks ---------- */
 .consent {
@@ -1027,6 +1028,8 @@ payload.reference = ref;
 payload.submittedAt = new Date().toISOString();
 nextBtn.disabled = true;
 nextBtn.innerHTML = '<span class="spin"></span> Submitting…';
+var wait = $("#demoNote"); wait.hidden = false; wait.style.color = "var(--muted)";
+wait.textContent = payload.photo ? "Saving your details and photo. This can take up to 15 seconds, so please keep this page open." : "Saving your details. Please keep this page open.";
 function done(){
 try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
 $("#refCode").textContent = ref;
